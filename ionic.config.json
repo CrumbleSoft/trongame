@@ -1,0 +1,8 @@
+{
+  "name": "btrail",
+  "app_id": "6c6514f8",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
