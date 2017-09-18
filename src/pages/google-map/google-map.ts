@@ -16,6 +16,8 @@ export class GoogleMapPage {
   map: any;
   position: any;
   playerPos: any;
+  userPos: { lat: number, lng: number };
+
   user: User;
   checkCount: number = 0;
   status: string;
@@ -66,12 +68,12 @@ export class GoogleMapPage {
             "elementType": "geometry",
             "stylers": [
               {
-                "color": "#212121"
+                "color": "#1d2c4d"
               }
             ]
           },
           {
-            "elementType": "labels.icon",
+            "elementType": "labels",
             "stylers": [
               {
                 "visibility": "off"
@@ -82,7 +84,7 @@ export class GoogleMapPage {
             "elementType": "labels.text.fill",
             "stylers": [
               {
-                "color": "#757575"
+                "color": "#8ec3b9"
               }
             ]
           },
@@ -90,25 +92,16 @@ export class GoogleMapPage {
             "elementType": "labels.text.stroke",
             "stylers": [
               {
-                "color": "#212121"
-              }
-            ]
-          },
-          {
-            "featureType": "administrative",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "color": "#757575"
+                "color": "#1a3646"
               }
             ]
           },
           {
             "featureType": "administrative.country",
-            "elementType": "labels.text.fill",
+            "elementType": "geometry.stroke",
             "stylers": [
               {
-                "color": "#9e9e9e"
+                "color": "#4b6878"
               }
             ]
           },
@@ -121,11 +114,11 @@ export class GoogleMapPage {
             ]
           },
           {
-            "featureType": "administrative.locality",
+            "featureType": "administrative.land_parcel",
             "elementType": "labels.text.fill",
             "stylers": [
               {
-                "color": "#bdbdbd"
+                "color": "#64779e"
               }
             ]
           },
@@ -138,62 +131,97 @@ export class GoogleMapPage {
             ]
           },
           {
-            "featureType": "poi",
-            "elementType": "labels.text",
+            "featureType": "administrative.province",
+            "elementType": "geometry.stroke",
             "stylers": [
               {
-                "visibility": "off"
+                "color": "#4b6878"
               }
             ]
           },
           {
-            "featureType": "poi",
-            "elementType": "labels.text.fill",
+            "featureType": "landscape.man_made",
+            "elementType": "geometry.stroke",
             "stylers": [
               {
-                "color": "#757575"
+                "color": "#334e87"
               }
             ]
           },
           {
-            "featureType": "poi.park",
+            "featureType": "landscape.natural",
             "elementType": "geometry",
             "stylers": [
               {
-                "color": "#181818"
+                "color": "#023e58"
               }
             ]
           },
           {
-            "featureType": "poi.park",
+            "featureType": "poi",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#283d6a"
+              }
+            ]
+          },
+          {
+            "featureType": "poi",
             "elementType": "labels.text.fill",
             "stylers": [
               {
-                "color": "#616161"
+                "color": "#6f9ba5"
               }
             ]
           },
           {
-            "featureType": "poi.park",
+            "featureType": "poi",
             "elementType": "labels.text.stroke",
             "stylers": [
               {
-                "color": "#1b1b1b"
+                "color": "#1d2c4d"
               }
             ]
           },
           {
-            "featureType": "road",
+            "featureType": "poi.business",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.park",
             "elementType": "geometry.fill",
             "stylers": [
               {
-                "color": "#2c2c2c"
+                "color": "#023e58"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#3C7680"
               }
             ]
           },
           {
             "featureType": "road",
-            "elementType": "labels",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#304a7d"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels.icon",
             "stylers": [
               {
                 "visibility": "off"
@@ -205,16 +233,16 @@ export class GoogleMapPage {
             "elementType": "labels.text.fill",
             "stylers": [
               {
-                "color": "#8a8a8a"
+                "color": "#98a5be"
               }
             ]
           },
           {
-            "featureType": "road.arterial",
-            "elementType": "geometry",
+            "featureType": "road",
+            "elementType": "labels.text.stroke",
             "stylers": [
               {
-                "color": "#373737"
+                "color": "#1d2c4d"
               }
             ]
           },
@@ -223,25 +251,42 @@ export class GoogleMapPage {
             "elementType": "geometry",
             "stylers": [
               {
-                "color": "#3c3c3c"
+                "color": "#2c6675"
               }
             ]
           },
           {
-            "featureType": "road.highway.controlled_access",
-            "elementType": "geometry",
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
             "stylers": [
               {
-                "color": "#4e4e4e"
+                "color": "#255763"
               }
             ]
           },
           {
-            "featureType": "road.local",
+            "featureType": "road.highway",
             "elementType": "labels.text.fill",
             "stylers": [
               {
-                "color": "#616161"
+                "color": "#b0d5ce"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+              {
+                "color": "#023e58"
+              }
+            ]
+          },
+          {
+            "featureType": "transit",
+            "stylers": [
+              {
+                "visibility": "off"
               }
             ]
           },
@@ -250,7 +295,34 @@ export class GoogleMapPage {
             "elementType": "labels.text.fill",
             "stylers": [
               {
-                "color": "#757575"
+                "color": "#98a5be"
+              }
+            ]
+          },
+          {
+            "featureType": "transit",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+              {
+                "color": "#1d2c4d"
+              }
+            ]
+          },
+          {
+            "featureType": "transit.line",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                "color": "#283d6a"
+              }
+            ]
+          },
+          {
+            "featureType": "transit.station",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#3a4762"
               }
             ]
           },
@@ -259,16 +331,7 @@ export class GoogleMapPage {
             "elementType": "geometry",
             "stylers": [
               {
-                "color": "#000000"
-              }
-            ]
-          },
-          {
-            "featureType": "water",
-            "elementType": "labels.text",
-            "stylers": [
-              {
-                "visibility": "off"
+                "color": "#0e1626"
               }
             ]
           },
@@ -277,7 +340,7 @@ export class GoogleMapPage {
             "elementType": "labels.text.fill",
             "stylers": [
               {
-                "color": "#3d3d3d"
+                "color": "#4e6d70"
               }
             ]
           }
@@ -292,314 +355,347 @@ export class GoogleMapPage {
     }, (err) => {
       console.log(err);
     });
+
+    this.updatePlayerMarker();
   }
 
-  addMarker() {
+  updatePlayerMarker() {
     this.geolocation.getCurrentPosition().then((position) => {
-      let marker = new google.maps.Marker({
-        map: this.map,
-        animation: google.maps.Animation.DROP,
-        position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-      });
+      this.userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
+      if (this.playerPos) {
+        this.playerPos = new google.maps.Marker({
+          map: this.map,
+          animation: google.maps.Animation.Drop,
+          position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+        });
 
-      let content = "<h4>Information!</h4>";
+        let content = "<h4>Information!</h4>";
 
-      this.addInfoWindow(marker, content);
+        this.addInfoWindow(this.playerPos, content);
+      } else {
+        this.transition(position);
+      }
     }, (err) => {
       console.log(err);
     });
   }
 
-  addInfoWindow(marker, content) {
+  numDeltas = 100;
+  delay = 10; //milliseconds
+  i = 0;
+  deltaLat;
+  deltaLng;
 
-    let infoWindow = new google.maps.InfoWindow({
-      content: content
-    });
-
-    google.maps.event.addListener(marker, 'click', () => {
-      infoWindow.open(this.map, marker);
-    });
-
+  transition(result) {
+    this.i = 0;
+    this.deltaLat = (result[0] - this.userPos.lat) / this.numDeltas;
+    this.deltaLng = (result[1] - this.userPos.lng) / this.numDeltas;
+    this.moveMarker();
   }
 
-  generateFakeTrail() {
-    let trail = [
-      [51.778135, 19.489866],
-      [51.777960, 19.491501],
-      [51.777792, 19.493433],
-      [51.777748, 19.494047],
-      [51.778379, 19.494018],
-      [51.778890, 19.493884],
-      [51.778823, 19.492956],
-      [51.778796, 19.492135],
-      [51.779417, 19.491996],
-      [51.779551, 19.493736],
-      [51.778570, 19.493970],
-      [51.778590, 19.494214],
-      [51.778882, 19.495110],
-    ];
+  moveMarker() {
+    this.userPos.lat += this.deltaLat;
+    this.userPos.lng += this.deltaLng;
+    var latlng = new google.maps.LatLng(this.userPos.lat, this.userPos.lng);
+    if (this.playerPos) {
+      this.playerPos.setPosition(latlng);
+    if (this.i != this.numDeltas) {
+      this.i++;
+      setTimeout(this.moveMarker, this.delay);
+    }
+  }
+}
 
-    this.roadSmoothingProvider.alignToRoads(trail).then((result: { snappedPoints: Array<SnappedPoint> }) => {
-      let snappedPoints: Array<SnappedPoint> = result.snappedPoints;
-      for (let sp of snappedPoints) {
-        let newtrailCoordinate = {
-          id: 1,
-          active: true,
-          lat: sp.location.latitude,
-          long: sp.location.longitude,
-          strength: 0.5 * this.user.level,
-          timeStamp: new Date()
-        };
-        this.user.trailCoordinates.push(newtrailCoordinate);
-      }
-      // this.generateTrail();
-    }).catch((error) => {
-      console.log(error);
-    });
+addInfoWindow(marker, content) {
+
+  let infoWindow = new google.maps.InfoWindow({
+    content: content
+  });
+
+  google.maps.event.addListener(marker, 'click', () => {
+    infoWindow.open(this.map, marker);
+  });
+
+}
+
+generateFakeTrail() {
+  let trail = [
+    [51.778135, 19.489866],
+    [51.777960, 19.491501],
+    [51.777792, 19.493433],
+    [51.777748, 19.494047],
+    [51.778379, 19.494018],
+    [51.778890, 19.493884],
+    [51.778823, 19.492956],
+    [51.778796, 19.492135],
+    [51.779417, 19.491996],
+    [51.779551, 19.493736],
+    [51.778570, 19.493970],
+    [51.778590, 19.494214],
+    [51.778882, 19.495110],
+  ];
+
+  this.roadSmoothingProvider.alignToRoads(trail).then((result: { snappedPoints: Array<SnappedPoint> }) => {
+    let snappedPoints: Array<SnappedPoint> = result.snappedPoints;
+    for (let sp of snappedPoints) {
+      let newtrailCoordinate = {
+        id: 1,
+        active: true,
+        lat: sp.location.latitude,
+        long: sp.location.longitude,
+        strength: 0.5 * this.user.level,
+        timeStamp: new Date()
+      };
+      this.user.trailCoordinates.push(newtrailCoordinate);
+    }
+    // this.generateTrail();
+  }).catch((error) => {
+    console.log(error);
+  });
+}
+
+generateTrail() {
+  let trail: Array<any> = new Array<any>();
+  for (let coord of this.user.trailCoordinates) {
+    trail.push(new google.maps.LatLng(coord.lat, coord.long));
   }
 
-  generateTrail() {
-    let trail: Array<any> = new Array<any>();
-    for (let coord of this.user.trailCoordinates) {
-      trail.push(new google.maps.LatLng(coord.lat, coord.long));
+  let userTrail = new google.maps.Polyline({
+    path: trail,
+    geodesic: true,
+    strokeColor: '#00fcff',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+
+  userTrail.setMap(this.map);
+
+  let enemyTrail: Array<any> = new Array<any>();
+  for (let t of this.pinkEnemyTrail) {
+    enemyTrail.push(new google.maps.LatLng(t[0], t[1]));
+  }
+
+  this.roadSmoothingProvider.alignToRoads(this.pinkEnemyTrail).then((result: { snappedPoints: Array<SnappedPoint> }) => {
+    let enemyTrail: Array<any> = new Array<any>();
+    enemyTrail = [];
+    for (let sp of result.snappedPoints) {
+      enemyTrail.push(new google.maps.LatLng(sp.location.latitude, sp.location.longitude));
     }
 
-    let userTrail = new google.maps.Polyline({
-      path: trail,
+
+    let enemyPinkTrail = new google.maps.Polyline({
+      path: enemyTrail,
       geodesic: true,
-      strokeColor: '#00fcff',
+      strokeColor: '#ff00f6',
       strokeOpacity: 1.0,
       strokeWeight: 2
     });
 
-    userTrail.setMap(this.map);
-
-    let enemyTrail: Array<any> = new Array<any>();
-    for (let t of this.pinkEnemyTrail) {
-      enemyTrail.push(new google.maps.LatLng(t[0], t[1]));
-    }
-
-    this.roadSmoothingProvider.alignToRoads(this.pinkEnemyTrail).then((result: { snappedPoints: Array<SnappedPoint> }) => {
-      let enemyTrail: Array<any> = new Array<any>();
-      enemyTrail = [];
-      for (let sp of result.snappedPoints) {
-        enemyTrail.push(new google.maps.LatLng(sp.location.latitude, sp.location.longitude));
-      }
+    enemyPinkTrail.setMap(this.map);
+  }).catch((error) => {
+    console.log(error);
+  });
 
 
-      let enemyPinkTrail = new google.maps.Polyline({
-        path: enemyTrail,
-        geodesic: true,
-        strokeColor: '#ff00f6',
-        strokeOpacity: 1.0,
-        strokeWeight: 2
-      });
+  //var polyline = L.polyline(trail, { color: '#00fcff' }).addTo(this.map);
+  // zoom the map to the polyline
+  //this.map.fitBounds(polyline.getBounds());
 
-      enemyPinkTrail.setMap(this.map);
-    }).catch((error) => {
-      console.log(error);
+  // if (this.user.trailCoordinates.length > 0) {
+  //   for (let tc of this.user.trailCoordinates) {
+
+  //   }
+  // }
+  this.checkForIntersection();
+}
+
+
+checkForIntersection() {
+  let vectors: Array<any> = [];
+
+  for (let i = 0; i < this.user.trailCoordinates.length - 1; i++) {
+    vectors.push({
+      start: this.user.trailCoordinates[i],
+      end: this.user.trailCoordinates[i + 1],
+      slope: (this.user.trailCoordinates[i + 1].long - this.user.trailCoordinates[i].long) / (this.user.trailCoordinates[i + 1].lat - this.user.trailCoordinates[i].lat)
     });
-
-
-    //var polyline = L.polyline(trail, { color: '#00fcff' }).addTo(this.map);
-    // zoom the map to the polyline
-    //this.map.fitBounds(polyline.getBounds());
-
-    // if (this.user.trailCoordinates.length > 0) {
-    //   for (let tc of this.user.trailCoordinates) {
-
-    //   }
-    // }
-    this.checkForIntersection();
   }
 
-
-  checkForIntersection() {
-    let vectors: Array<any> = [];
-
-    for (let i = 0; i < this.user.trailCoordinates.length - 1; i++) {
-      vectors.push({
-        start: this.user.trailCoordinates[i],
-        end: this.user.trailCoordinates[i + 1],
-        slope: (this.user.trailCoordinates[i + 1].long - this.user.trailCoordinates[i].long) / (this.user.trailCoordinates[i + 1].lat - this.user.trailCoordinates[i].lat)
-      });
-    }
-
-    let indexCurrent: number = 0, indexNext: number = 0, collisionPoint: Array<number> = null;
-    for (let currentVector of vectors) {
-      indexNext = 0;
-      for (let nextVector of vectors) {
-        if (indexCurrent != indexNext) {
-          collisionPoint = this.checkForCollision(currentVector, nextVector);
-          if (collisionPoint) {
-            //make Sector
-            this.createSector(collisionPoint, currentVector.end, nextVector.start);
-          }
+  let indexCurrent: number = 0, indexNext: number = 0, collisionPoint: Array<number> = null;
+  for (let currentVector of vectors) {
+    indexNext = 0;
+    for (let nextVector of vectors) {
+      if (indexCurrent != indexNext) {
+        collisionPoint = this.checkForCollision(currentVector, nextVector);
+        if (collisionPoint) {
+          //make Sector
+          this.createSector(collisionPoint, currentVector.end, nextVector.start);
         }
-        indexNext++;
       }
-      indexCurrent++;
+      indexNext++;
     }
+    indexCurrent++;
   }
+}
 
-  checkForCollision(currentVector, nextVector): Array<number> {
-    let c1 = currentVector.start.long - (currentVector.slope * currentVector.start.lat);
-    let c2 = nextVector.start.long - (nextVector.slope * nextVector.start.lat);
+checkForCollision(currentVector, nextVector): Array < number > {
+  let c1 = currentVector.start.long - (currentVector.slope * currentVector.start.lat);
+  let c2 = nextVector.start.long - (nextVector.slope * nextVector.start.lat);
 
-    let long = (currentVector.slope * currentVector.start.lat + c1) - (nextVector.slope * nextVector.start.lat + c2);
-    let lat = (long - c1) / currentVector.slope;
-    let largestLat = this.getLargestLat(currentVector, nextVector), smallestLat = this.getSmallestLat(currentVector, nextVector), largestLng = this.getLargestLng(currentVector, nextVector), sallestLng = this.getSmallestLng(currentVector, nextVector);
-    if (long && lat) {
-      console.log(lat + "," + long);
-      if (long <= largestLng && long >= smallestLat && lat <= largestLat && lat >= smallestLat) {
-        //COLLISION!!!
-        console.log("Collision Detected!!");
-        return [lat, long];
-      } else {
-        //NO COLLISION
-        console.log("No Collision Detected!!");
-        return null;
-      }
-    }
-  }
-
-  getLargestLat(currentVector, nextVector): number {
-    if (currentVector.start.lat > currentVector.end.lat) {
-      if (currentVector.start.lat > nextVector.start.lat) {
-        if (currentVector.start.lat > nextVector.end.lat)
-          return currentVector.start.lat;
-        else
-          return nextVector.end.lat;
-      } else {
-        if (nextVector.start.lat > nextVector.end.lat)
-          return nextVector.start.lat;
-        else
-          return nextVector.end.lat;
-      }
+  let long = (currentVector.slope * currentVector.start.lat + c1) - (nextVector.slope * nextVector.start.lat + c2);
+  let lat = (long - c1) / currentVector.slope;
+  let largestLat = this.getLargestLat(currentVector, nextVector), smallestLat = this.getSmallestLat(currentVector, nextVector), largestLng = this.getLargestLng(currentVector, nextVector), sallestLng = this.getSmallestLng(currentVector, nextVector);
+  if(long && lat) {
+    console.log(lat + "," + long);
+    if (long <= largestLng && long >= smallestLat && lat <= largestLat && lat >= smallestLat) {
+      //COLLISION!!!
+      console.log("Collision Detected!!");
+      return [lat, long];
     } else {
-      if (currentVector.end.lat > nextVector.start.lat) {
-        if (currentVector.end.lat > nextVector.end.lat)
-          return currentVector.end.lat;
-        else
-          return nextVector.end.lat;
-      } else {
-        if (nextVector.start.lat > nextVector.end.lat)
-          return nextVector.start.lat;
-        else
-          return nextVector.end.lat;
-      }
+      //NO COLLISION
+      console.log("No Collision Detected!!");
+      return null;
     }
   }
+}
 
-  getSmallestLat(currentVector, nextVector): number {
-    if (currentVector.start.lat < currentVector.end.lat) {
-      if (currentVector.start.lat < nextVector.start.lat) {
-        if (currentVector.start.lat < nextVector.end.lat)
-          return currentVector.start.lat;
-        else
-          return nextVector.end.lat;
-      } else {
-        if (nextVector.start.lat < nextVector.end.lat)
-          return nextVector.start.lat;
-        else
-          return nextVector.end.lat;
-      }
+getLargestLat(currentVector, nextVector): number {
+  if (currentVector.start.lat > currentVector.end.lat) {
+    if (currentVector.start.lat > nextVector.start.lat) {
+      if (currentVector.start.lat > nextVector.end.lat)
+        return currentVector.start.lat;
+      else
+        return nextVector.end.lat;
     } else {
-      if (currentVector.end.lat < nextVector.start.lat) {
-        if (currentVector.end.lat < nextVector.end.lat)
-          return currentVector.end.lat;
-        else
-          return nextVector.end.lat;
-      } else {
-        if (nextVector.start.lat < nextVector.end.lat)
-          return nextVector.start.lat;
-        else
-          return nextVector.end.lat;
-      }
+      if (nextVector.start.lat > nextVector.end.lat)
+        return nextVector.start.lat;
+      else
+        return nextVector.end.lat;
     }
-  }
-
-  getLargestLng(currentVector, nextVector): number {
-    if (currentVector.start.long > currentVector.end.long) {
-      if (currentVector.start.long > nextVector.start.long) {
-        if (currentVector.start.long > nextVector.end.long)
-          return currentVector.start.long;
-        else
-          return nextVector.end.long;
-      } else {
-        if (nextVector.start.long > nextVector.end.long)
-          return nextVector.start.long;
-        else
-          return nextVector.end.long;
-      }
+  } else {
+    if (currentVector.end.lat > nextVector.start.lat) {
+      if (currentVector.end.lat > nextVector.end.lat)
+        return currentVector.end.lat;
+      else
+        return nextVector.end.lat;
     } else {
-      if (currentVector.end.long > nextVector.start.long) {
-        if (currentVector.end.long > nextVector.end.long)
-          return currentVector.end.long;
-        else
-          return nextVector.end.long;
-      } else {
-        if (nextVector.start.long > nextVector.end.long)
-          return nextVector.start.long;
-        else
-          return nextVector.end.long;
-      }
+      if (nextVector.start.lat > nextVector.end.lat)
+        return nextVector.start.lat;
+      else
+        return nextVector.end.lat;
     }
   }
+}
 
-  getSmallestLng(currentVector, nextVector): number {
-    if (currentVector.start.long < currentVector.end.long) {
-      if (currentVector.start.long < nextVector.start.long) {
-        if (currentVector.start.long < nextVector.end.long)
-          return currentVector.start.long;
-        else
-          return nextVector.end.long;
-      } else {
-        if (nextVector.start.long < nextVector.end.long)
-          return nextVector.start.long;
-        else
-          return nextVector.end.long;
-      }
+getSmallestLat(currentVector, nextVector): number {
+  if (currentVector.start.lat < currentVector.end.lat) {
+    if (currentVector.start.lat < nextVector.start.lat) {
+      if (currentVector.start.lat < nextVector.end.lat)
+        return currentVector.start.lat;
+      else
+        return nextVector.end.lat;
     } else {
-      if (currentVector.end.long < nextVector.start.long) {
-        if (currentVector.end.long < nextVector.end.long)
-          return currentVector.end.long;
-        else
-          return nextVector.end.long;
-      } else {
-        if (nextVector.start.long < nextVector.end.long)
-          return nextVector.start.long;
-        else
-          return nextVector.end.long;
-      }
+      if (nextVector.start.lat < nextVector.end.lat)
+        return nextVector.start.lat;
+      else
+        return nextVector.end.lat;
+    }
+  } else {
+    if (currentVector.end.lat < nextVector.start.lat) {
+      if (currentVector.end.lat < nextVector.end.lat)
+        return currentVector.end.lat;
+      else
+        return nextVector.end.lat;
+    } else {
+      if (nextVector.start.lat < nextVector.end.lat)
+        return nextVector.start.lat;
+      else
+        return nextVector.end.lat;
     }
   }
+}
 
-  createSector(collisionPoint, sectorStartPoint, sectorEndPoint) {
-    let sectorArray: Array<any> = new Array<any>();
-    sectorArray.push(collisionPoint);
-    let hasStarted: boolean = false;
-    for (let co of this.user.trailCoordinates) {
-      if (!hasStarted) {
-        if (co.lat == sectorStartPoint.lat && co.long == sectorStartPoint.long) {
-          hasStarted = true;
-          sectorArray.push(new google.maps.LatLng(co.lat, co.long));
-        }
-      } else {
+getLargestLng(currentVector, nextVector): number {
+  if (currentVector.start.long > currentVector.end.long) {
+    if (currentVector.start.long > nextVector.start.long) {
+      if (currentVector.start.long > nextVector.end.long)
+        return currentVector.start.long;
+      else
+        return nextVector.end.long;
+    } else {
+      if (nextVector.start.long > nextVector.end.long)
+        return nextVector.start.long;
+      else
+        return nextVector.end.long;
+    }
+  } else {
+    if (currentVector.end.long > nextVector.start.long) {
+      if (currentVector.end.long > nextVector.end.long)
+        return currentVector.end.long;
+      else
+        return nextVector.end.long;
+    } else {
+      if (nextVector.start.long > nextVector.end.long)
+        return nextVector.start.long;
+      else
+        return nextVector.end.long;
+    }
+  }
+}
+
+getSmallestLng(currentVector, nextVector): number {
+  if (currentVector.start.long < currentVector.end.long) {
+    if (currentVector.start.long < nextVector.start.long) {
+      if (currentVector.start.long < nextVector.end.long)
+        return currentVector.start.long;
+      else
+        return nextVector.end.long;
+    } else {
+      if (nextVector.start.long < nextVector.end.long)
+        return nextVector.start.long;
+      else
+        return nextVector.end.long;
+    }
+  } else {
+    if (currentVector.end.long < nextVector.start.long) {
+      if (currentVector.end.long < nextVector.end.long)
+        return currentVector.end.long;
+      else
+        return nextVector.end.long;
+    } else {
+      if (nextVector.start.long < nextVector.end.long)
+        return nextVector.start.long;
+      else
+        return nextVector.end.long;
+    }
+  }
+}
+
+createSector(collisionPoint, sectorStartPoint, sectorEndPoint) {
+  let sectorArray: Array<any> = new Array<any>();
+  sectorArray.push(collisionPoint);
+  let hasStarted: boolean = false;
+  for (let co of this.user.trailCoordinates) {
+    if (!hasStarted) {
+      if (co.lat == sectorStartPoint.lat && co.long == sectorStartPoint.long) {
+        hasStarted = true;
         sectorArray.push(new google.maps.LatLng(co.lat, co.long));
-        if (co.lat == sectorEndPoint.lat && co.long == sectorEndPoint.long) {
-          break;
-        }
+      }
+    } else {
+      sectorArray.push(new google.maps.LatLng(co.lat, co.long));
+      if (co.lat == sectorEndPoint.lat && co.long == sectorEndPoint.long) {
+        break;
       }
     }
-
-    this.map.addPolyline({
-      color: "red",
-      geodesic: true,
-      points: sectorArray,
-      visible: true,
-      width: 5,
-      zIndex: 100
-    })
   }
+
+  this.map.addPolyline({
+    color: "red",
+    geodesic: true,
+    points: sectorArray,
+    visible: true,
+    width: 5,
+    zIndex: 100
+  })
+}
 }
