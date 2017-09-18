@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Map
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="generateTrail()"><ion-icon name="add"></ion-icon>View Trail</button>
+    </ion-buttons>  
+  </ion-navbar>
+</ion-header>
+ 
+<ion-content>
+  <div #map id="map" style="height:100%"></div> 
+  <!-- <div class="generate-trail">
+    <button (click)="generateTrail()">CLICK</button>
+    <p>Number of trail coordinates = {{user?.trailCoordinates.length}}</p>
+    <p>current status = {{status}}</p>
+  </div>  -->
+</ion-content>
