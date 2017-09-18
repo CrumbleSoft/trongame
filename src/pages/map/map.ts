@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-import L from "leaflet";
-import Tangram from "tangram";
 import { Faction, User, Sector, TrailCoordinate, SnappedPoint, SPLocation } from "../../app/classes/classes";
 import { LocationsProvider } from "../../providers/locations/locations";
+import {
+  GoogleMaps,
+  GoogleMap,
+  GoogleMapsEvent,
+  GoogleMapOptions,
+  CameraPosition,
+  MarkerOptions,
+  Marker,
+  ILatLng
+} from '@ionic-native/google-maps';
+
 /**
  * Generated class for the MapPage page.
  *
@@ -19,32 +28,21 @@ import { LocationsProvider } from "../../providers/locations/locations";
 })
 export class MapPage {
 
-  map: L.Map;
-  center: L.PointTuple;
+  map: GoogleMap;
+  mapElement: HTMLElement;
   position: any;
   playerPos: any;
   user: User;
-  trailIcon: any;
   checkCount: number = 0;
   status: string;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation, public roadSmoothingProvider: LocationsProvider) {
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation, public roadSmoothingProvider: LocationsProvider, private googleMaps: GoogleMaps) {
   }
 
   ionViewDidLoad() {
     this.status = "Building Map";
     this.initMap();
 
-
-
-    this.trailIcon = L.icon({
-      iconUrl: 'http://cdn.mysitemyway.com/etc-mysitemyway/icons/legacy-previews/icons/glowing-purple-neon-icons-symbols-shapes/114371-glowing-purple-neon-icon-symbols-shapes-shapes-circle-clear.png',
-      iconSize: [38, 95],
-      iconAnchor: [22, 94],
-      popupAnchor: [-3, -76],
-      shadowUrl: 'my-icon-shadow.png',
-      shadowSize: [68, 95],
-      shadowAnchor: [22, 94]
-    });
     this.user = {
       id: 1,
       crumbles: 300,
@@ -60,39 +58,15 @@ export class MapPage {
     this.generateFakeTrail();
   }
 
-  // onSuccess Callback
-  // This method accepts a Position object, which contains the
-  // current GPS coordinates
-  //
-  onSuccess(position) {
-    if (this.center) {
-      this.initMap();
-    } else {
-      alert("FAIL");
-    }
-    return [position.coords.latitude, position.coords.longitude];
-    // this.initMap();
-  }
-
-  // onError Callback receives a PositionError object
-  //
-  onError(error) {
-    alert('code: ' + error.code + '\n' +
-      'message: ' + error.message + '\n');
-    //this.initMap();
-    return null;
-  }
-
   initMap() {
     let self = this;
-    console.log("TEST");
     this.geolocation.getCurrentPosition().then((position) => {
       this.status = "Map Built";
       this.buildMap(position);
-      setInterval(function () {
-        this.checkCount++;
-        self.updatePosition();
-      }, 500);
+      // setInterval(function () {
+      //   this.checkCount++;
+      //   self.updatePosition();
+      // }, 5000);
     }, (err) => {
       console.log("FAIL");
       console.log(err);
@@ -100,15 +74,33 @@ export class MapPage {
   }
 
   buildMap(position: any) {
-    this.map = L.map('map', {
-      center: [position.coords.latitude, position.coords.longitude],
-      zoom: 13
-    });
+    this.mapElement = document.getElementById('map');
+    let mapOptions: GoogleMapOptions = {
+      camera: {
+        target: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        },
+        zoom: 18,
+        tilt: 30
+      }
+    };
 
-    var osm = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', {
-      maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy;<a href="https://carto.com/attribution">CARTO</a>'
-    });
-    this.map.addLayer(osm);
+    this.map = this.googleMaps.create(this.mapElement, mapOptions);
+
+
+    this.map.one(GoogleMapsEvent.MAP_READY)
+      .then(() => {
+        console.log('Map is ready!');
+
+        this.updateMarker(position);
+
+      });
+
+    // var osm = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', {
+    //   maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy;<a href="https://carto.com/attribution">CARTO</a>'
+    // });
+    // this.map.addLayer(osm);
 
     // let layer = Tangram.leafletLayer({
     //   scene: 'https://tangrams.github.io/tron-style/tron-style.yaml'
@@ -118,9 +110,6 @@ export class MapPage {
 
     //Add OSM Layer
     // L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(this.map);
-
-    this.updateMarker(position);
-
   }
 
   updatePosition() {
@@ -147,7 +136,23 @@ export class MapPage {
   updateMarker(position) {
     if (!this.playerPos) {
       this.playerPos = [position.coords.latitude, position.coords.longitude];
-      L.marker(this.playerPos).addTo(this.map);
+      // Now you can use all methods safely.
+      this.map.addMarker({
+        title: 'Ionic',
+        icon: 'blue',
+        animation: 'DROP',
+        position: {
+          lat: this.playerPos[0],
+          lng: this.playerPos[1]
+        }
+      })
+        .then(marker => {
+          marker.on(GoogleMapsEvent.MARKER_CLICK)
+            .subscribe(() => {
+              alert('clicked');
+            });
+        });
+
     } else
       this.playerPos = [position.coords.latitude, position.coords.longitude];
 
@@ -223,30 +228,22 @@ export class MapPage {
   }
 
   generateTrail() {
-    // let trail = [
-    //   [51.778135, 19.489866],
-    //   [51.777960, 19.491501],
-    //   [51.777792, 19.493433],
-    //   [51.777748, 19.494047],
-    //   [51.778379, 19.494018],
-    //   [51.778890, 19.493884],
-    //   [51.778823, 19.492956],
-    //   [51.778796, 19.492135],
-    //   [51.779417, 19.491996],
-    //   [51.779551, 19.493736],
-    //   [51.778570, 19.493970],
-    //   [51.778590, 19.494214],
-    //   [51.778882, 19.495110]
-    // ];
 
-    let trail: Array<Array<number>> = new Array<Array<number>>();
+    let trail: Array<ILatLng> = new Array<ILatLng>();
     for (let coord of this.user.trailCoordinates) {
-      trail.push([coord.lat, coord.long]);
+      trail.push({ lat: coord.lat, lng: coord.long });
     }
-
-    var polyline = L.polyline(trail, { color: '#00fcff' }).addTo(this.map);
+    this.map.addPolyline({
+      color: "red",
+      geodesic: true,
+      points: trail,
+      visible: true,
+      width: 5,
+      zIndex: 100
+    })
+    //var polyline = L.polyline(trail, { color: '#00fcff' }).addTo(this.map);
     // zoom the map to the polyline
-    this.map.fitBounds(polyline.getBounds());
+    //this.map.fitBounds(polyline.getBounds());
 
     // if (this.user.trailCoordinates.length > 0) {
     //   for (let tc of this.user.trailCoordinates) {
@@ -418,26 +415,31 @@ export class MapPage {
   }
 
   createSector(collisionPoint, sectorStartPoint, sectorEndPoint) {
-    let sectorArray: Array<any> = new Array<any>();
+    let sectorArray: Array<ILatLng> = new Array<ILatLng>();
     sectorArray.push(collisionPoint);
     let hasStarted: boolean = false;
     for (let co of this.user.trailCoordinates) {
       if (!hasStarted) {
         if (co.lat == sectorStartPoint.lat && co.long == sectorStartPoint.long) {
           hasStarted = true;
-          sectorArray.push([co.lat,co.long]);
+          sectorArray.push({ lat: co.lat, lng: co.long });
         }
       } else {
-        sectorArray.push([co.lat,co.long]);
-        if(co.lat == sectorEndPoint.lat && co.long == sectorEndPoint.long) {
+        sectorArray.push({ lat: co.lat, lng: co.long });
+        if (co.lat == sectorEndPoint.lat && co.long == sectorEndPoint.long) {
           break;
         }
       }
     }
 
-    var polygon = L.polygon(sectorArray, {color: 'red'}).addTo(this.map);
-    // zoom the map to the polygon
-    this.map.fitBounds(polygon.getBounds());
+    this.map.addPolyline({
+      color: "red",
+      geodesic: true,
+      points: sectorArray,
+      visible: true,
+      width: 5,
+      zIndex: 100
+    })
   }
 }
 
