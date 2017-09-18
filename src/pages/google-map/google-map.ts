@@ -20,17 +20,17 @@ export class GoogleMapPage {
   checkCount: number = 0;
   status: string;
 
-  pinkEnemyTrail: Array<{ lat: number, lng: number }> = [
-    { lat: 51.778744, lng: 19.484092 },
-    { lat: 51.778106, lng: 19.489768 },
-    { lat: 51.777761, lng: 19.493909 },
-    { lat: 51.777044, lng: 19.494059 },
-    { lat: 51.775889, lng: 19.492600 },
-    { lat: 51.775703, lng: 19.490647 },
-    { lat: 51.776831, lng: 19.490068 },
-    { lat: 51.778066, lng: 19.489810 },
-    { lat: 51.779898, lng: 19.489403 },
-    { lat: 51.780349, lng: 19.490862 }
+  pinkEnemyTrail: Array<Array<number>> = [
+    [51.778744, 19.484092],
+    [51.778106, 19.489768],
+    [51.777761, 19.493909],
+    [51.777044, 19.494059],
+    [51.775889, 19.492600],
+    [51.775703, 19.490647],
+    [51.776831, 19.490068],
+    [51.778066, 19.489810],
+    [51.779898, 19.489403],
+    [51.780349, 19.490862]
   ];
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private roadSmoothingProvider: LocationsProvider) { }
@@ -62,83 +62,224 @@ export class GoogleMapPage {
         zoom: 15,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         styles: [
-          { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
-          { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
-          { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
           {
-            featureType: 'administrative.locality',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#d59563' }]
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#212121"
+              }
+            ]
           },
           {
-            featureType: 'poi',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#d59563' }]
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
           },
           {
-            featureType: 'poi.park',
-            elementType: 'geometry',
-            stylers: [{ color: '#263c3f' }]
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#757575"
+              }
+            ]
           },
           {
-            featureType: 'poi.park',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#6b9a76' }]
+            "elementType": "labels.text.stroke",
+            "stylers": [
+              {
+                "color": "#212121"
+              }
+            ]
           },
           {
-            featureType: 'road',
-            elementType: 'geometry',
-            stylers: [{ color: '#38414e' }]
+            "featureType": "administrative",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#757575"
+              }
+            ]
           },
           {
-            featureType: 'road',
-            elementType: 'geometry.stroke',
-            stylers: [{ color: '#212a37' }]
+            "featureType": "administrative.country",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#9e9e9e"
+              }
+            ]
           },
           {
-            featureType: 'road',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#9ca5b3' }]
+            "featureType": "administrative.land_parcel",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
           },
           {
-            featureType: 'road.highway',
-            elementType: 'geometry',
-            stylers: [{ color: '#746855' }]
+            "featureType": "administrative.locality",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#bdbdbd"
+              }
+            ]
           },
           {
-            featureType: 'road.highway',
-            elementType: 'geometry.stroke',
-            stylers: [{ color: '#1f2835' }]
+            "featureType": "administrative.neighborhood",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
           },
           {
-            featureType: 'road.highway',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#f3d19c' }]
+            "featureType": "poi",
+            "elementType": "labels.text",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
           },
           {
-            featureType: 'transit',
-            elementType: 'geometry',
-            stylers: [{ color: '#2f3948' }]
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#757575"
+              }
+            ]
           },
           {
-            featureType: 'transit.station',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#d59563' }]
+            "featureType": "poi.park",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#181818"
+              }
+            ]
           },
           {
-            featureType: 'water',
-            elementType: 'geometry',
-            stylers: [{ color: '#17263c' }]
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#616161"
+              }
+            ]
           },
           {
-            featureType: 'water',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#515c6d' }]
+            "featureType": "poi.park",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+              {
+                "color": "#1b1b1b"
+              }
+            ]
           },
           {
-            featureType: 'water',
-            elementType: 'labels.text.stroke',
-            stylers: [{ color: '#17263c' }]
+            "featureType": "road",
+            "elementType": "geometry.fill",
+            "stylers": [
+              {
+                "color": "#2c2c2c"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#8a8a8a"
+              }
+            ]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#373737"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#3c3c3c"
+              }
+            ]
+          },
+          {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#4e4e4e"
+              }
+            ]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#616161"
+              }
+            ]
+          },
+          {
+            "featureType": "transit",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#757575"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [
+              {
+                "color": "#000000"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              {
+                "color": "#3d3d3d"
+              }
+            ]
           }
         ],
         disableDefaultUI: true,
@@ -235,18 +376,30 @@ export class GoogleMapPage {
 
     let enemyTrail: Array<any> = new Array<any>();
     for (let t of this.pinkEnemyTrail) {
-      enemyTrail.push(new google.maps.LatLng(t.lat, t.lng));
+      enemyTrail.push(new google.maps.LatLng(t[0], t[1]));
     }
 
-    let enemyPinkTrail = new google.maps.Polyline({
-      path: enemyTrail,
-      geodesic: true,
-      strokeColor: '#ff00f6',
-      strokeOpacity: 1.0,
-      strokeWeight: 2
+    this.roadSmoothingProvider.alignToRoads(this.pinkEnemyTrail).then((result: { snappedPoints: Array<SnappedPoint> }) => {
+      let enemyTrail: Array<any> = new Array<any>();
+      enemyTrail = [];
+      for (let sp of result.snappedPoints) {
+        enemyTrail.push(new google.maps.LatLng(sp.location.latitude, sp.location.longitude));
+      }
+
+
+      let enemyPinkTrail = new google.maps.Polyline({
+        path: enemyTrail,
+        geodesic: true,
+        strokeColor: '#ff00f6',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+      });
+
+      enemyPinkTrail.setMap(this.map);
+    }).catch((error) => {
+      console.log(error);
     });
 
-    enemyPinkTrail.setMap(this.map);
 
     //var polyline = L.polyline(trail, { color: '#00fcff' }).addTo(this.map);
     // zoom the map to the polyline
@@ -257,6 +410,196 @@ export class GoogleMapPage {
 
     //   }
     // }
-    //this.checkForIntersection();
+    this.checkForIntersection();
+  }
+
+
+  checkForIntersection() {
+    let vectors: Array<any> = [];
+
+    for (let i = 0; i < this.user.trailCoordinates.length - 1; i++) {
+      vectors.push({
+        start: this.user.trailCoordinates[i],
+        end: this.user.trailCoordinates[i + 1],
+        slope: (this.user.trailCoordinates[i + 1].long - this.user.trailCoordinates[i].long) / (this.user.trailCoordinates[i + 1].lat - this.user.trailCoordinates[i].lat)
+      });
+    }
+
+    let indexCurrent: number = 0, indexNext: number = 0, collisionPoint: Array<number> = null;
+    for (let currentVector of vectors) {
+      indexNext = 0;
+      for (let nextVector of vectors) {
+        if (indexCurrent != indexNext) {
+          collisionPoint = this.checkForCollision(currentVector, nextVector);
+          if (collisionPoint) {
+            //make Sector
+            this.createSector(collisionPoint, currentVector.end, nextVector.start);
+          }
+        }
+        indexNext++;
+      }
+      indexCurrent++;
+    }
+  }
+
+  checkForCollision(currentVector, nextVector): Array<number> {
+    let c1 = currentVector.start.long - (currentVector.slope * currentVector.start.lat);
+    let c2 = nextVector.start.long - (nextVector.slope * nextVector.start.lat);
+
+    let long = (currentVector.slope * currentVector.start.lat + c1) - (nextVector.slope * nextVector.start.lat + c2);
+    let lat = (long - c1) / currentVector.slope;
+    let largestLat = this.getLargestLat(currentVector, nextVector), smallestLat = this.getSmallestLat(currentVector, nextVector), largestLng = this.getLargestLng(currentVector, nextVector), sallestLng = this.getSmallestLng(currentVector, nextVector);
+    if (long && lat) {
+      console.log(lat + "," + long);
+      if (long <= largestLng && long >= smallestLat && lat <= largestLat && lat >= smallestLat) {
+        //COLLISION!!!
+        console.log("Collision Detected!!");
+        return [lat, long];
+      } else {
+        //NO COLLISION
+        console.log("No Collision Detected!!");
+        return null;
+      }
+    }
+  }
+
+  getLargestLat(currentVector, nextVector): number {
+    if (currentVector.start.lat > currentVector.end.lat) {
+      if (currentVector.start.lat > nextVector.start.lat) {
+        if (currentVector.start.lat > nextVector.end.lat)
+          return currentVector.start.lat;
+        else
+          return nextVector.end.lat;
+      } else {
+        if (nextVector.start.lat > nextVector.end.lat)
+          return nextVector.start.lat;
+        else
+          return nextVector.end.lat;
+      }
+    } else {
+      if (currentVector.end.lat > nextVector.start.lat) {
+        if (currentVector.end.lat > nextVector.end.lat)
+          return currentVector.end.lat;
+        else
+          return nextVector.end.lat;
+      } else {
+        if (nextVector.start.lat > nextVector.end.lat)
+          return nextVector.start.lat;
+        else
+          return nextVector.end.lat;
+      }
+    }
+  }
+
+  getSmallestLat(currentVector, nextVector): number {
+    if (currentVector.start.lat < currentVector.end.lat) {
+      if (currentVector.start.lat < nextVector.start.lat) {
+        if (currentVector.start.lat < nextVector.end.lat)
+          return currentVector.start.lat;
+        else
+          return nextVector.end.lat;
+      } else {
+        if (nextVector.start.lat < nextVector.end.lat)
+          return nextVector.start.lat;
+        else
+          return nextVector.end.lat;
+      }
+    } else {
+      if (currentVector.end.lat < nextVector.start.lat) {
+        if (currentVector.end.lat < nextVector.end.lat)
+          return currentVector.end.lat;
+        else
+          return nextVector.end.lat;
+      } else {
+        if (nextVector.start.lat < nextVector.end.lat)
+          return nextVector.start.lat;
+        else
+          return nextVector.end.lat;
+      }
+    }
+  }
+
+  getLargestLng(currentVector, nextVector): number {
+    if (currentVector.start.long > currentVector.end.long) {
+      if (currentVector.start.long > nextVector.start.long) {
+        if (currentVector.start.long > nextVector.end.long)
+          return currentVector.start.long;
+        else
+          return nextVector.end.long;
+      } else {
+        if (nextVector.start.long > nextVector.end.long)
+          return nextVector.start.long;
+        else
+          return nextVector.end.long;
+      }
+    } else {
+      if (currentVector.end.long > nextVector.start.long) {
+        if (currentVector.end.long > nextVector.end.long)
+          return currentVector.end.long;
+        else
+          return nextVector.end.long;
+      } else {
+        if (nextVector.start.long > nextVector.end.long)
+          return nextVector.start.long;
+        else
+          return nextVector.end.long;
+      }
+    }
+  }
+
+  getSmallestLng(currentVector, nextVector): number {
+    if (currentVector.start.long < currentVector.end.long) {
+      if (currentVector.start.long < nextVector.start.long) {
+        if (currentVector.start.long < nextVector.end.long)
+          return currentVector.start.long;
+        else
+          return nextVector.end.long;
+      } else {
+        if (nextVector.start.long < nextVector.end.long)
+          return nextVector.start.long;
+        else
+          return nextVector.end.long;
+      }
+    } else {
+      if (currentVector.end.long < nextVector.start.long) {
+        if (currentVector.end.long < nextVector.end.long)
+          return currentVector.end.long;
+        else
+          return nextVector.end.long;
+      } else {
+        if (nextVector.start.long < nextVector.end.long)
+          return nextVector.start.long;
+        else
+          return nextVector.end.long;
+      }
+    }
+  }
+
+  createSector(collisionPoint, sectorStartPoint, sectorEndPoint) {
+    let sectorArray: Array<any> = new Array<any>();
+    sectorArray.push(collisionPoint);
+    let hasStarted: boolean = false;
+    for (let co of this.user.trailCoordinates) {
+      if (!hasStarted) {
+        if (co.lat == sectorStartPoint.lat && co.long == sectorStartPoint.long) {
+          hasStarted = true;
+          sectorArray.push(new google.maps.LatLng(co.lat, co.long));
+        }
+      } else {
+        sectorArray.push(new google.maps.LatLng(co.lat, co.long));
+        if (co.lat == sectorEndPoint.lat && co.long == sectorEndPoint.long) {
+          break;
+        }
+      }
+    }
+
+    this.map.addPolyline({
+      color: "red",
+      geodesic: true,
+      points: sectorArray,
+      visible: true,
+      width: 5,
+      zIndex: 100
+    })
   }
 }
