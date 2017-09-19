@@ -17,27 +17,49 @@ export class GoogleMapPage {
   position: any;
   playerPos: any;
   userPos: { lat: number, lng: number };
-
+  userTrail: Array<Array<number>> = [
+    // [51.778135, 19.489866],
+    // [51.777960, 19.491501],
+    // [51.777792, 19.493433],
+    // [51.777748, 19.494047],
+    // [51.778379, 19.494018],
+    [51.778882, 19.495110],
+    [51.778590, 19.494214],
+    [51.778570, 19.493970],
+    [51.779551, 19.493736],
+    [51.779417, 19.491996],
+    [51.778796, 19.492135],
+    [51.778823, 19.492956],
+    [51.778890, 19.493884],
+  ];
   user: User;
   checkCount: number = 0;
   status: string;
 
+  testLine1: Array<Array<number>> = [
+    [51.782850, 19.450064],
+    [51.775932, 19.452188]
+  ];
+
+  testLine2: Array<Array<number>> = [
+    [51.776251, 19.448540],
+    [51.776696, 19.453958]
+  ]
+
   pinkEnemyTrail: Array<Array<number>> = [
-    [51.778744, 19.484092],
-    [51.778106, 19.489768],
-    [51.777761, 19.493909],
-    [51.777044, 19.494059],
-    [51.775889, 19.492600],
-    [51.775703, 19.490647],
-    [51.776831, 19.490068],
-    [51.778066, 19.489810],
+    [51.780349, 19.490862],
     [51.779898, 19.489403],
-    [51.780349, 19.490862]
+    [51.778066, 19.489810],
+    [51.776831, 19.490068],
+    [51.775703, 19.490647],
+    [51.775889, 19.492600],
+    [51.777044, 19.494059],
+    [51.777761, 19.493909],
+    [51.778106, 19.489768],
+    [51.778744, 19.484092]
   ];
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private roadSmoothingProvider: LocationsProvider) { }
-
-
 
   ionViewDidLoad() {
     this.user = {
@@ -359,6 +381,35 @@ export class GoogleMapPage {
     this.updatePlayerMarker();
   }
 
+  testCollision() {
+    let currentCoord = this.user.trailCoordinates[this.user.trailCoordinates.length-1];
+    let index = 0;
+    let sector = null;
+    let polyLine: Array<{ lat: number, lng: number }> = new Array<{ lat: number, lng: number }>();
+
+    console.log(this.user.trailCoordinates.length);
+    for (let i = this.user.trailCoordinates.length - 5; i>=0; i--) {
+      let dist = this.getDistance({ lat: currentCoord.lat, lng: currentCoord.long}, { lat: this.user.trailCoordinates[i].lat, lng: this.user.trailCoordinates[i].long });
+      polyLine.push({ lat: this.user.trailCoordinates[i].lat, lng: this.user.trailCoordinates[i].long });
+      console.log(dist);
+      if (dist < 40) {
+        console.log(dist + ", connect");
+        sector = new google.maps.Polygon({
+          paths: polyLine,
+          strokeColor: '#00fcff',
+          strokeOpacity: 0.8,
+          strokeWeight: 3,
+          fillColor: '#00fcff',
+          fillOpacity: 0.35
+        });
+        break;
+      }
+    }
+    console.log(sector);
+    if (sector != null)
+      sector.setMap(this.map);
+  }
+
   updatePlayerMarker() {
     this.geolocation.getCurrentPosition().then((position) => {
       this.userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
@@ -399,303 +450,263 @@ export class GoogleMapPage {
     var latlng = new google.maps.LatLng(this.userPos.lat, this.userPos.lng);
     if (this.playerPos) {
       this.playerPos.setPosition(latlng);
-    if (this.i != this.numDeltas) {
-      this.i++;
-      setTimeout(this.moveMarker, this.delay);
+      if (this.i != this.numDeltas) {
+        this.i++;
+        setTimeout(this.moveMarker, this.delay);
+      }
     }
   }
-}
 
-addInfoWindow(marker, content) {
+  addInfoWindow(marker, content) {
 
-  let infoWindow = new google.maps.InfoWindow({
-    content: content
-  });
+    let infoWindow = new google.maps.InfoWindow({
+      content: content
+    });
 
-  google.maps.event.addListener(marker, 'click', () => {
-    infoWindow.open(this.map, marker);
-  });
+    google.maps.event.addListener(marker, 'click', () => {
+      infoWindow.open(this.map, marker);
+    });
 
-}
-
-generateFakeTrail() {
-  let trail = [
-    [51.778135, 19.489866],
-    [51.777960, 19.491501],
-    [51.777792, 19.493433],
-    [51.777748, 19.494047],
-    [51.778379, 19.494018],
-    [51.778890, 19.493884],
-    [51.778823, 19.492956],
-    [51.778796, 19.492135],
-    [51.779417, 19.491996],
-    [51.779551, 19.493736],
-    [51.778570, 19.493970],
-    [51.778590, 19.494214],
-    [51.778882, 19.495110],
-  ];
-
-  this.roadSmoothingProvider.alignToRoads(trail).then((result: { snappedPoints: Array<SnappedPoint> }) => {
-    let snappedPoints: Array<SnappedPoint> = result.snappedPoints;
-    for (let sp of snappedPoints) {
-      let newtrailCoordinate = {
-        id: 1,
-        active: true,
-        lat: sp.location.latitude,
-        long: sp.location.longitude,
-        strength: 0.5 * this.user.level,
-        timeStamp: new Date()
-      };
-      this.user.trailCoordinates.push(newtrailCoordinate);
-    }
-    // this.generateTrail();
-  }).catch((error) => {
-    console.log(error);
-  });
-}
-
-generateTrail() {
-  let trail: Array<any> = new Array<any>();
-  for (let coord of this.user.trailCoordinates) {
-    trail.push(new google.maps.LatLng(coord.lat, coord.long));
   }
 
-  let userTrail = new google.maps.Polyline({
-    path: trail,
-    geodesic: true,
-    strokeColor: '#00fcff',
-    strokeOpacity: 1.0,
-    strokeWeight: 2
-  });
+  generateFakeTrail() {
 
-  userTrail.setMap(this.map);
-
-  let enemyTrail: Array<any> = new Array<any>();
-  for (let t of this.pinkEnemyTrail) {
-    enemyTrail.push(new google.maps.LatLng(t[0], t[1]));
-  }
-
-  this.roadSmoothingProvider.alignToRoads(this.pinkEnemyTrail).then((result: { snappedPoints: Array<SnappedPoint> }) => {
-    let enemyTrail: Array<any> = new Array<any>();
-    enemyTrail = [];
-    for (let sp of result.snappedPoints) {
-      enemyTrail.push(new google.maps.LatLng(sp.location.latitude, sp.location.longitude));
-    }
-
-
-    let enemyPinkTrail = new google.maps.Polyline({
-      path: enemyTrail,
+    let userOldTrail = new google.maps.Polyline({
+      path: this.userTrail,
       geodesic: true,
-      strokeColor: '#ff00f6',
+      strokeColor: '#ffffff',
       strokeOpacity: 1.0,
       strokeWeight: 2
     });
 
-    enemyPinkTrail.setMap(this.map);
-  }).catch((error) => {
-    console.log(error);
-  });
+    userOldTrail.setMap(this.map);
 
-
-  //var polyline = L.polyline(trail, { color: '#00fcff' }).addTo(this.map);
-  // zoom the map to the polyline
-  //this.map.fitBounds(polyline.getBounds());
-
-  // if (this.user.trailCoordinates.length > 0) {
-  //   for (let tc of this.user.trailCoordinates) {
-
-  //   }
-  // }
-  this.checkForIntersection();
-}
-
-
-checkForIntersection() {
-  let vectors: Array<any> = [];
-
-  for (let i = 0; i < this.user.trailCoordinates.length - 1; i++) {
-    vectors.push({
-      start: this.user.trailCoordinates[i],
-      end: this.user.trailCoordinates[i + 1],
-      slope: (this.user.trailCoordinates[i + 1].long - this.user.trailCoordinates[i].long) / (this.user.trailCoordinates[i + 1].lat - this.user.trailCoordinates[i].lat)
+    this.roadSmoothingProvider.alignToRoads(this.userTrail).then((result: { snappedPoints: Array<SnappedPoint> }) => {
+      let snappedPoints: Array<SnappedPoint> = result.snappedPoints;
+      for (let sp of snappedPoints) {
+        let newtrailCoordinate = {
+          id: 1,
+          active: true,
+          lat: sp.location.latitude,
+          long: sp.location.longitude,
+          strength: 0.5 * this.user.level,
+          timeStamp: new Date()
+        };
+        this.user.trailCoordinates.push(newtrailCoordinate);
+      }
+      // this.generateTrail();
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
-  let indexCurrent: number = 0, indexNext: number = 0, collisionPoint: Array<number> = null;
-  for (let currentVector of vectors) {
-    indexNext = 0;
-    for (let nextVector of vectors) {
-      if (indexCurrent != indexNext) {
-        collisionPoint = this.checkForCollision(currentVector, nextVector);
-        if (collisionPoint) {
-          //make Sector
-          this.createSector(collisionPoint, currentVector.end, nextVector.start);
+  generateTrail() {
+    let trail: Array<any> = new Array<any>();
+    let newPoint : any;
+    for (let coord of this.user.trailCoordinates) {
+      trail.push(new google.maps.LatLng(coord.lat, coord.long));
+      // newPoint = new google.maps.Marker({
+      //   map: this.map,
+      //   animation: google.maps.Animation.Drop,
+      //   position: new google.maps.LatLng(coord.lat, coord.long)
+      // });
+    }
+
+    let userTrail = new google.maps.Polyline({
+      path: trail,
+      geodesic: true,
+      strokeColor: '#00fcff',
+      strokeOpacity: 1.0,
+      strokeWeight: 10
+    });
+
+    userTrail.setMap(this.map);
+
+    let enemyTrail: Array<any> = new Array<any>();
+    for (let t of this.pinkEnemyTrail) {
+      enemyTrail.push(new google.maps.LatLng(t[0], t[1]));
+    }
+
+    this.roadSmoothingProvider.alignToRoads(this.pinkEnemyTrail).then((result: { snappedPoints: Array<SnappedPoint> }) => {
+      let enemyTrail: Array<any> = new Array<any>();
+      enemyTrail = [];
+      for (let sp of result.snappedPoints) {
+        enemyTrail.push(new google.maps.LatLng(sp.location.latitude, sp.location.longitude));
+      }
+
+
+      let enemyPinkTrail = new google.maps.Polyline({
+        path: enemyTrail,
+        geodesic: true,
+        strokeColor: '#ff00f6',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+      });
+
+      enemyPinkTrail.setMap(this.map);
+    }).catch((error) => {
+      console.log(error);
+    });
+
+
+    //var polyline = L.polyline(trail, { color: '#00fcff' }).addTo(this.map);
+    // zoom the map to the polyline
+    //this.map.fitBounds(polyline.getBounds());
+
+    // if (this.user.trailCoordinates.length > 0) {
+    //   for (let tc of this.user.trailCoordinates) {
+
+    //   }
+    // }
+    this.testCollision();
+
+
+    //this.checkForIntersection();
+  }
+
+  checkForIntersection() {
+    let vectors: Array<any> = [];
+    let trailPoints: Array<TrailCoordinate> = new Array<TrailCoordinate>();
+    for (let ut of this.userTrail) {
+      trailPoints.push({
+        active: true,
+        id: 1,
+        lat: ut[0],
+        long: ut[1],
+        strength: 5,
+        timeStamp: new Date()
+      });
+    }
+    for (let i = 0; i < trailPoints.length - 1; i++) {
+      vectors.push({
+        start: trailPoints[i],
+        end: trailPoints[i + 1],
+        slope: (trailPoints[i + 1].long - trailPoints[i].long) / (trailPoints[i + 1].lat - trailPoints[i].lat)
+      });
+    }
+
+    let indexCurrent: number = 0, indexNext: number = 0, collisionPoint: Array<number> = null;
+    for (let currentVector of vectors) {
+      indexNext = 0;
+      for (let nextVector of vectors) {
+        if (indexCurrent != indexNext) {
+          collisionPoint = this.checkForCollision(currentVector, nextVector);
+          if (collisionPoint) {
+            //make Sector
+            this.createSector(collisionPoint, currentVector.end, nextVector.start);
+          }
+        }
+        indexNext++;
+      }
+      indexCurrent++;
+    }
+  }
+
+
+  rad(x) {
+    return x * Math.PI / 180;
+  };
+
+  getDistance(p1, p2) {
+    var R = 6378137; // Earth’s mean radius in meter
+    var dLat = this.rad(p2.lat - p1.lat);
+    var dLong = this.rad(p2.lng - p1.lng);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.rad(p1.lat)) * Math.cos(this.rad(p2.lat)) *
+      Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+    return d; // returns the distance in meter
+  };
+
+  checkForCollision(currentVector: { start: any, end: any }, nextVector: { start: any, end: any }): Array<number> {
+    let delta: number = 100;
+    let currentSlope: number = (currentVector.end.lng() - currentVector.start.lng()) / (currentVector.end.lat() - currentVector.start.lat());
+    let nextSlope: number = (nextVector.end.lng() - nextVector.start.lng()) / (nextVector.end.lat() - nextVector.start.lat());
+
+    let c1 = currentVector.start.lng() - (currentSlope * currentVector.start.lat());
+    let c2 = nextVector.start.lng() - (nextSlope * nextVector.start.lat());
+
+    let long = (currentSlope * currentVector.start.lat() + c1) - (nextSlope * nextVector.start.lat() + c2);
+    let lat = (long - c1) / currentSlope;
+    // console.log(currentVector);
+
+    // // console.log(currentVector.slope);
+    // console.log(currentVector.start.lat);
+    // console.log(c1);
+    // console.log(nextVector.slope);
+    // console.log(nextVector.start.lat);
+    // console.log(c2);
+
+    if (long && lat) {
+      console.log(lat + "," + long);
+      let point = this.onSegment(currentVector, [lat, long]);
+      if (point) {
+        //COLLISION!!!
+        console.log("Collision Detected!!");
+        return point;
+      } else {
+        //NO COLLISION
+        console.log("No Collision Detected!!");
+        return null;
+      }
+    }
+  }
+
+  onSegment(line: { start: any, end: any }, point: Array<number>) {
+    if (point[0] > 51.7 && point[0] < 51.8) {
+      console.log(point);
+      console.log(line);
+    }
+    if (point[0] <= this.max(line.start.lat(), line.end.lat())
+      && point[0] >= this.min(line.start.lat(), line.end.lat())
+      && point[1] <= this.max(line.start.lng(), line.end.lng())
+      && point[1] >= this.min(line.start.lng(), line.end.lng())) {
+      console.log("TEST");
+      return point;
+    }
+    return null;
+  }
+
+  max(n1, n2): number {
+    if (n1 >= n2)
+      return n1
+    else
+      return n2;
+  }
+
+  min(n1, n2): number {
+    if (n1 <= n2)
+      return n1
+    else
+      return n2;
+  }
+
+  createSector(collisionPoint, sectorStartPoint, sectorEndPoint) {
+    let sectorArray: Array<any> = new Array<any>();
+    sectorArray.push(collisionPoint);
+    let hasStarted: boolean = false;
+    for (let co of this.user.trailCoordinates) {
+      if (!hasStarted) {
+        if (co.lat == sectorStartPoint.lat && co.long == sectorStartPoint.long) {
+          hasStarted = true;
+          sectorArray.push(new google.maps.LatLng(co.lat, co.long));
+        }
+      } else {
+        sectorArray.push(new google.maps.LatLng(co.lat, co.long));
+        if (co.lat == sectorEndPoint.lat && co.long == sectorEndPoint.long) {
+          break;
         }
       }
-      indexNext++;
     }
-    indexCurrent++;
+
+    // this.map.addPolyline({
+    //   color: "red",
+    //   geodesic: true,
+    //   points: sectorArray,
+    //   visible: true,
+    //   width: 5,
+    //   zIndex: 100
+    // })
   }
-}
-
-checkForCollision(currentVector, nextVector): Array < number > {
-  let c1 = currentVector.start.long - (currentVector.slope * currentVector.start.lat);
-  let c2 = nextVector.start.long - (nextVector.slope * nextVector.start.lat);
-
-  let long = (currentVector.slope * currentVector.start.lat + c1) - (nextVector.slope * nextVector.start.lat + c2);
-  let lat = (long - c1) / currentVector.slope;
-  let largestLat = this.getLargestLat(currentVector, nextVector), smallestLat = this.getSmallestLat(currentVector, nextVector), largestLng = this.getLargestLng(currentVector, nextVector), sallestLng = this.getSmallestLng(currentVector, nextVector);
-  if(long && lat) {
-    console.log(lat + "," + long);
-    if (long <= largestLng && long >= smallestLat && lat <= largestLat && lat >= smallestLat) {
-      //COLLISION!!!
-      console.log("Collision Detected!!");
-      return [lat, long];
-    } else {
-      //NO COLLISION
-      console.log("No Collision Detected!!");
-      return null;
-    }
-  }
-}
-
-getLargestLat(currentVector, nextVector): number {
-  if (currentVector.start.lat > currentVector.end.lat) {
-    if (currentVector.start.lat > nextVector.start.lat) {
-      if (currentVector.start.lat > nextVector.end.lat)
-        return currentVector.start.lat;
-      else
-        return nextVector.end.lat;
-    } else {
-      if (nextVector.start.lat > nextVector.end.lat)
-        return nextVector.start.lat;
-      else
-        return nextVector.end.lat;
-    }
-  } else {
-    if (currentVector.end.lat > nextVector.start.lat) {
-      if (currentVector.end.lat > nextVector.end.lat)
-        return currentVector.end.lat;
-      else
-        return nextVector.end.lat;
-    } else {
-      if (nextVector.start.lat > nextVector.end.lat)
-        return nextVector.start.lat;
-      else
-        return nextVector.end.lat;
-    }
-  }
-}
-
-getSmallestLat(currentVector, nextVector): number {
-  if (currentVector.start.lat < currentVector.end.lat) {
-    if (currentVector.start.lat < nextVector.start.lat) {
-      if (currentVector.start.lat < nextVector.end.lat)
-        return currentVector.start.lat;
-      else
-        return nextVector.end.lat;
-    } else {
-      if (nextVector.start.lat < nextVector.end.lat)
-        return nextVector.start.lat;
-      else
-        return nextVector.end.lat;
-    }
-  } else {
-    if (currentVector.end.lat < nextVector.start.lat) {
-      if (currentVector.end.lat < nextVector.end.lat)
-        return currentVector.end.lat;
-      else
-        return nextVector.end.lat;
-    } else {
-      if (nextVector.start.lat < nextVector.end.lat)
-        return nextVector.start.lat;
-      else
-        return nextVector.end.lat;
-    }
-  }
-}
-
-getLargestLng(currentVector, nextVector): number {
-  if (currentVector.start.long > currentVector.end.long) {
-    if (currentVector.start.long > nextVector.start.long) {
-      if (currentVector.start.long > nextVector.end.long)
-        return currentVector.start.long;
-      else
-        return nextVector.end.long;
-    } else {
-      if (nextVector.start.long > nextVector.end.long)
-        return nextVector.start.long;
-      else
-        return nextVector.end.long;
-    }
-  } else {
-    if (currentVector.end.long > nextVector.start.long) {
-      if (currentVector.end.long > nextVector.end.long)
-        return currentVector.end.long;
-      else
-        return nextVector.end.long;
-    } else {
-      if (nextVector.start.long > nextVector.end.long)
-        return nextVector.start.long;
-      else
-        return nextVector.end.long;
-    }
-  }
-}
-
-getSmallestLng(currentVector, nextVector): number {
-  if (currentVector.start.long < currentVector.end.long) {
-    if (currentVector.start.long < nextVector.start.long) {
-      if (currentVector.start.long < nextVector.end.long)
-        return currentVector.start.long;
-      else
-        return nextVector.end.long;
-    } else {
-      if (nextVector.start.long < nextVector.end.long)
-        return nextVector.start.long;
-      else
-        return nextVector.end.long;
-    }
-  } else {
-    if (currentVector.end.long < nextVector.start.long) {
-      if (currentVector.end.long < nextVector.end.long)
-        return currentVector.end.long;
-      else
-        return nextVector.end.long;
-    } else {
-      if (nextVector.start.long < nextVector.end.long)
-        return nextVector.start.long;
-      else
-        return nextVector.end.long;
-    }
-  }
-}
-
-createSector(collisionPoint, sectorStartPoint, sectorEndPoint) {
-  let sectorArray: Array<any> = new Array<any>();
-  sectorArray.push(collisionPoint);
-  let hasStarted: boolean = false;
-  for (let co of this.user.trailCoordinates) {
-    if (!hasStarted) {
-      if (co.lat == sectorStartPoint.lat && co.long == sectorStartPoint.long) {
-        hasStarted = true;
-        sectorArray.push(new google.maps.LatLng(co.lat, co.long));
-      }
-    } else {
-      sectorArray.push(new google.maps.LatLng(co.lat, co.long));
-      if (co.lat == sectorEndPoint.lat && co.long == sectorEndPoint.long) {
-        break;
-      }
-    }
-  }
-
-  this.map.addPolyline({
-    color: "red",
-    geodesic: true,
-    points: sectorArray,
-    visible: true,
-    width: 5,
-    zIndex: 100
-  })
-}
 }
