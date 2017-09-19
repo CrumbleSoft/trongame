@@ -12,13 +12,15 @@ import { GoogleMapPage } from '../pages/google-map/google-map';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LocationsProvider } from '../providers/locations/locations';
+import { UserDetailsPage } from '../pages/user-details/user-details';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ListPage,
-    GoogleMapPage
+    GoogleMapPage,
+    UserDetailsPage
   ],
   imports: [
     BrowserModule,
@@ -30,7 +32,8 @@ import { LocationsProvider } from '../providers/locations/locations';
     MyApp,
     HomePage,
     ListPage,
-    GoogleMapPage
+    GoogleMapPage,
+    UserDetailsPage
   ],
   providers: [
     StatusBar,

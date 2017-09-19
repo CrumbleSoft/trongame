@@ -1,0 +1,31 @@
+<!--
+  Generated template for the UserDetailsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>userDetails</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="page-content" padding>
+  <div [ngClass]="{'btrail-red':user.faction =='red','btrail-green':user.faction == 'green','btrail-blue':user.faction == 'blue','btrail-yellow':user.faction == 'yellow','btrail-pink':user.faction == 'pink'}" *ngIf="user">
+    <img class="circle" src="https://pbs.twimg.com/profile_images/442333242184568833/7r5f5W3d.jpeg" />
+    <div class="username" item-right>
+      {{user.username}}
+    </div>
+    <br> BLUE FACTION
+    <div class="level">
+      <div class="level-progress-border" style="width: 120px">
+        <div class="level-progress" [style.height]="'24px'" [style.width]="levelProgress"></div>
+      </div>
+      LVL {{user.level}}
+    </div>
+  </div>
+
+</ion-content>

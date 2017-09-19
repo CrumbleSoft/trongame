@@ -5,25 +5,27 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { GoogleMapPage } from '../pages/google-map/google-map';
-
+import { ListPage } from '../pages/list/list';
+import { UserDetailsPage } from '../pages/user-details/user-details';
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: any = GoogleMapPage;
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{ title: string, menuTitle: string, component: any }>;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'Map', component: GoogleMapPage },
-
+      { title: 'Map', menuTitle: 'Map', component: GoogleMapPage },
+      { title: 'User', menuTitle: 'User Details', component: UserDetailsPage },
+      { title: 'Notifications', menuTitle: 'Notifications', component: ListPage },
+      { title: 'Home', menuTitle: 'Sign Out', component: HomePage },
     ];
 
   }

@@ -64,9 +64,10 @@ export class GoogleMapPage {
   ionViewDidLoad() {
     this.user = {
       id: 1,
+      faction : 'blue',
       crumbles: 300,
       email: "cwhite788@gmail.com",
-      energon: 25000,
+      photons: 3320,
       level: 3,
       sectors: new Array<Sector>(),
       trailCoordinates: new Array<TrailCoordinate>(),

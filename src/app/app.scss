@@ -12,6 +12,8 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+
 .dark-cyan {
   background-color: black;
   color: rgb(0, 238, 255);
@@ -27,19 +29,24 @@
 }
 
 .btrail-red {
-  color : #ff0000;
+	color : #ff0000;
+	text-shadow: 0px 0px 12px #ff0000;
 }
 .btrail-pink {
-  color : #ff00f6;
+	color : #ff00f6;
+	text-shadow: 0px 0px 12px #ff00f6;
 }
 .btrail-blue {
-  color : #00fcff;
+	color : #00fcff;
+	text-shadow: 0px 0px 12px #00fcff;
 }
 .btrail-green {
-  color : #96ff00;
+	color : #96ff00;
+	text-shadow: 0px 0px 12px #96ff00;
 }
 .btrail-yellow {
-  color : #ffe400;
+	color : #ffe400;
+	text-shadow: 0px 0px 12px #ffe400;
 }
 
 

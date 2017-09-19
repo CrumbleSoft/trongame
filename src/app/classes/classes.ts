@@ -9,11 +9,12 @@ export class Faction {
 
 export class User {
     id : number;
+    faction : string;
     username: string;
     email: string;
     level: number;
     crumbles: number;
-    energon: number;
+    photons: number;
     sectors: Array<Sector>;
     trailCoordinates : Array<TrailCoordinate>;
     icon: string;
