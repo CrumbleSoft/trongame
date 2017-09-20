@@ -7,6 +7,9 @@
 <ion-header>
 
   <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>userDetails</ion-title>
   </ion-navbar>
 
@@ -14,7 +17,8 @@
 
 
 <ion-content class="page-content" padding>
-  <div [ngClass]="{'btrail-red':user.faction =='red','btrail-green':user.faction == 'green','btrail-blue':user.faction == 'blue','btrail-yellow':user.faction == 'yellow','btrail-pink':user.faction == 'pink'}" *ngIf="user">
+  <div [ngClass]="{'btrail-red':user.faction =='red','btrail-green':user.faction == 'green','btrail-blue':user.faction == 'blue','btrail-yellow':user.faction == 'yellow','btrail-pink':user.faction == 'pink'}"
+    *ngIf="user">
     <img class="circle" src="https://pbs.twimg.com/profile_images/442333242184568833/7r5f5W3d.jpeg" />
     <div class="username" item-right>
       {{user.username}}
@@ -26,6 +30,12 @@
       </div>
       LVL {{user.level}}
     </div>
+  </div>
+  <div>
+    USER HIGHSCORES
+    <ul>
+      <li [ngClass]="{'highscore-list-item':true,'btrail-red':u.faction=='red','btrail-blue':u.faction=='blue','btrail-yellow':u.faction=='yellow','btrail-green':u.faction=='green','btrail-pink':u.faction=='pink'}" *ngFor="let u of userHs">{{u.username}} - {{u.photons}}</li>
+    </ul>
   </div>
 
 </ion-content>

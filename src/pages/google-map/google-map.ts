@@ -64,13 +64,14 @@ export class GoogleMapPage {
   ionViewDidLoad() {
     this.user = {
       id: 1,
-      faction : 'blue',
+      faction: 'blue',
       crumbles: 300,
       email: "cwhite788@gmail.com",
       photons: 3320,
       level: 3,
       sectors: new Array<Sector>(),
       trailCoordinates: new Array<TrailCoordinate>(),
+      trail : null,
       username: "Tronmac",
       icon: "https://image.flaticon.com/icons/png/512/33/33622.png"
     };
@@ -375,22 +376,21 @@ export class GoogleMapPage {
         },
       }
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      this.updatePlayerMarker();
     }, (err) => {
       console.log(err);
     });
-
-    this.updatePlayerMarker();
   }
 
   testCollision() {
-    let currentCoord = this.user.trailCoordinates[this.user.trailCoordinates.length-1];
+    let currentCoord = this.user.trailCoordinates[this.user.trailCoordinates.length - 1];
     let index = 0;
     let sector = null;
     let polyLine: Array<{ lat: number, lng: number }> = new Array<{ lat: number, lng: number }>();
 
     console.log(this.user.trailCoordinates.length);
-    for (let i = this.user.trailCoordinates.length - 5; i>=0; i--) {
-      let dist = this.getDistance({ lat: currentCoord.lat, lng: currentCoord.long}, { lat: this.user.trailCoordinates[i].lat, lng: this.user.trailCoordinates[i].long });
+    for (let i = this.user.trailCoordinates.length - 5; i >= 0; i--) {
+      let dist = this.getDistance({ lat: currentCoord.lat, lng: currentCoord.long }, { lat: this.user.trailCoordinates[i].lat, lng: this.user.trailCoordinates[i].long });
       polyLine.push({ lat: this.user.trailCoordinates[i].lat, lng: this.user.trailCoordinates[i].long });
       console.log(dist);
       if (dist < 40) {
@@ -412,24 +412,60 @@ export class GoogleMapPage {
   }
 
   updatePlayerMarker() {
-    this.geolocation.getCurrentPosition().then((position) => {
-      this.userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
-      if (this.playerPos) {
+    let watchOptions = {
+      frequency: 1000,
+      timeout: 3000,
+      enableHighAccuracy: false
+    };
+
+
+    this.geolocation.watchPosition().subscribe((position) => {
+      //check distance between new coordinate and this.playerPos
+      //if distance greater than 30 meters
+      if (!this.playerPos) {
+        this.userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
         this.playerPos = new google.maps.Marker({
           map: this.map,
           animation: google.maps.Animation.Drop,
           position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
         });
-
-        let content = "<h4>Information!</h4>";
-
-        this.addInfoWindow(this.playerPos, content);
       } else {
-        this.transition(position);
+        this.transition([position.coords.latitude, position.coords.longitude]);
+        //this.playerPos.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
       }
-    }, (err) => {
-      console.log(err);
+    }, (error) => {
+      console.log('Error getting location', error);
     });
+
+    // this.geolocation.getCurrentPosition().then((position) => {
+    //   alert(JSON.stringify(position));
+    //   this.playerPos = new google.maps.Marker({
+    //     map: this.map,
+    //     animation: google.maps.Animation.Drop,
+    //     position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+    //   });
+    // }).catch((error) => {
+    //   console.log('Error getting location', error);
+    // });
+
+    // this.geolocation.getCurrentPosition().then((position) => {
+    //   this.userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
+    //   if (this.playerPos) {
+    //     this.playerPos = new google.maps.Marker({
+    //       map: this.map,
+    //       animation: google.maps.Animation.Drop,
+    //       position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+    //     });
+
+    //     let content = "<h4>Information!</h4>";
+
+    //     this.addInfoWindow(this.playerPos, content);
+    //   } else {
+    //     this.transition(position);
+    //   }
+    // }, (err) => {
+    //   console.log(err);
+    // });
   }
 
   numDeltas = 100;
@@ -446,14 +482,16 @@ export class GoogleMapPage {
   }
 
   moveMarker() {
-    this.userPos.lat += this.deltaLat;
-    this.userPos.lng += this.deltaLng;
-    var latlng = new google.maps.LatLng(this.userPos.lat, this.userPos.lng);
-    if (this.playerPos) {
-      this.playerPos.setPosition(latlng);
-      if (this.i != this.numDeltas) {
-        this.i++;
-        setTimeout(this.moveMarker, this.delay);
+    if (this.userPos) {
+      this.userPos.lat += this.deltaLat;
+      this.userPos.lng += this.deltaLng;
+      var latlng = new google.maps.LatLng(this.userPos.lat, this.userPos.lng);
+      if (this.playerPos) {
+        this.playerPos.setPosition(latlng);
+        if (this.i != this.numDeltas) {
+          this.i++;
+          setTimeout(this.moveMarker, this.delay);
+        }
       }
     }
   }
@@ -503,7 +541,7 @@ export class GoogleMapPage {
 
   generateTrail() {
     let trail: Array<any> = new Array<any>();
-    let newPoint : any;
+    let newPoint: any;
     for (let coord of this.user.trailCoordinates) {
       trail.push(new google.maps.LatLng(coord.lat, coord.long));
       // newPoint = new google.maps.Marker({
@@ -595,6 +633,7 @@ export class GoogleMapPage {
           if (collisionPoint) {
             //make Sector
             this.createSector(collisionPoint, currentVector.end, nextVector.start);
+            this.user.trailCoordinates = new Array<TrailCoordinate>();
           }
         }
         indexNext++;

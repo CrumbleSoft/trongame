@@ -17,6 +17,7 @@ export class User {
     photons: number;
     sectors: Array<Sector>;
     trailCoordinates : Array<TrailCoordinate>;
+    trail : any;
     icon: string;
 }
 
