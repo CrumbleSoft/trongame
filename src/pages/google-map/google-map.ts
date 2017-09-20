@@ -431,41 +431,16 @@ export class GoogleMapPage {
         });
       } else {
         this.transition([position.coords.latitude, position.coords.longitude]);
+        this.addTrailSegment(position);
         //this.playerPos.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
       }
     }, (error) => {
       console.log('Error getting location', error);
     });
+  }
 
-    // this.geolocation.getCurrentPosition().then((position) => {
-    //   alert(JSON.stringify(position));
-    //   this.playerPos = new google.maps.Marker({
-    //     map: this.map,
-    //     animation: google.maps.Animation.Drop,
-    //     position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-    //   });
-    // }).catch((error) => {
-    //   console.log('Error getting location', error);
-    // });
-
-    // this.geolocation.getCurrentPosition().then((position) => {
-    //   this.userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
-    //   if (this.playerPos) {
-    //     this.playerPos = new google.maps.Marker({
-    //       map: this.map,
-    //       animation: google.maps.Animation.Drop,
-    //       position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-    //     });
-
-    //     let content = "<h4>Information!</h4>";
-
-    //     this.addInfoWindow(this.playerPos, content);
-    //   } else {
-    //     this.transition(position);
-    //   }
-    // }, (err) => {
-    //   console.log(err);
-    // });
+  addTrailSegment(position) {
+    
   }
 
   numDeltas = 100;

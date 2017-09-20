@@ -9,15 +9,13 @@ page-user-details {
     border-style: solid;
     border-color: #00fcff;
     border-width: 2px;
-    box-shadow: 0px 0px 9px 2px #00fcff;
   }
+
   .username {
-    color: #00fcff;
     float: right;
     font-size: 3.5rem;
   }
   .faction-color {
-    color: #00fcff;
     font-size: 1.8rem;
   }
   .level {
@@ -35,5 +33,29 @@ page-user-details {
   .w3-hover-gray:hover {
     color: #000!important;
     background-color: #bbb!important;
+  }
+
+  .highscore-list-item {
+
+  }
+
+  .red {
+
+  }
+
+  .yellow {
+
+  }
+
+  .blue {
+
+  }
+
+  .green {
+
+  }
+
+  .pink {
+
   }
 }
